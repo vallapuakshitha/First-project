@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hostel room allocation and maintenance request portal">
+  <title>Hostel Room Allocation & Maintenance Portal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">H</span><span>Hostel<span class="brand-light">Desk</span><small>ROOMS · CARE · COMMUNITY</small></span></a>
+    <nav id="nav" class="nav hidden">
+      <span id="welcomeText" class="welcome"></span>
+      <button id="logoutBtn" class="btn btn-outline btn-small">Log out</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="authView" class="auth-layout">
+      <div class="hero-panel">
+        <div class="eyebrow">YOUR HOSTEL, SIMPLIFIED</div>
+        <h1>A better way to<br><span>feel at home.</span></h1>
+        <p>Find your room, keep track of your allocation, and raise maintenance requests without the paperwork.</p>
+        <div class="hero-points">
+          <div><span class="point-icon">⌂</span><span><b>Room allocation</b><small>Clear room and bed details</small></span></div>
+          <div><span class="point-icon">✓</span><span><b>Maintenance tracking</b><small>Know the status of every request</small></span></div>
+          <div><span class="point-icon">♡</span><span><b>One simple portal</b><small>Designed for hostel residents</small></span></div>
+        </div>
+        <div class="hero-footer">A calmer, more organised hostel experience.</div>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="tab active" data-auth="login">Sign in</button>
+          <button class="tab" data-auth="register">Create account</button>
+        </div>
+        <div id="authMessage" class="message hidden" role="status"></div>
+        <form id="loginForm" class="auth-form">
+          <h2>Welcome back</h2><p class="muted">Sign in to access your hostel dashboard.</p>
+          <label>Email address<input type="email" name="email" placeholder="you@example.com" required autocomplete="email"></label>
+          <label>Password<input type="password" name="password" placeholder="Enter your password" required minlength="8" autocomplete="current-password"></label>
+          <button class="btn btn-primary btn-wide" type="submit">Sign in <span>→</span></button>
+          <p class="fine-print">New resident? Choose “Create account” to register.</p>
+        </form>
+        <form id="registerForm" class="auth-form hidden">
+          <h2>Create your account</h2><p class="muted">Register as a hostel resident.</p>
+          <label>Full name<input type="text" name="name" placeholder="Your full name" required minlength="2" maxlength="80"></label>
+          <label>Email address<input type="email" name="email" placeholder="you@example.com" required autocomplete="email"></label>
+          <label>Student ID<input type="text" name="student_id" placeholder="e.g. 26CSE001" required minlength="3" maxlength="30"></label>
+          <label>Password<input type="password" name="password" placeholder="At least 8 characters" required minlength="8" autocomplete="new-password"></label>
+          <button class="btn btn-primary btn-wide" type="submit">Create account <span>→</span></button>
+          <p class="fine-print">Accounts created here receive the resident role. An administrator must allocate your room.</p>
+        </form>
+      </div>
+    </section>
+
+    <section id="appView" class="app-view hidden">
+      <div class="page-heading">
+        <div><div class="eyebrow">HOSTEL MANAGEMENT</div><h1 id="dashboardTitle">Your dashboard</h1><p id="dashboardSubtitle" class="muted">Everything you need, in one place.</p></div>
+        <div class="heading-chip"><span class="live-dot"></span> Portal online</div>
+      </div>
+      <div id="appMessage" class="message hidden" role="status"></div>
+
+      <div id="stats" class="stats-grid"></div>
+
+      <div id="residentPanel" class="dashboard-grid">
+        <section class="panel room-panel">
+          <div class="panel-heading"><div><span class="section-kicker">YOUR SPACE</span><h2>Room allocation</h2></div><span class="panel-icon">⌂</span></div>
+          <div id="myRoom" class="room-content"></div>
+        </section>
+        <section class="panel request-panel">
+          <div class="panel-heading"><div><span class="section-kicker">NEED A HAND?</span><h2>Raise a request</h2></div><span class="panel-icon">＋</span></div>
+          <form id="requestForm" class="stack-form">
+            <label>Issue category<select name="category" required><option value="">Choose a category</option><option>Electrical</option><option>Plumbing</option><option>Furniture</option><option>Cleaning</option><option>Internet</option><option>Other</option></select></label>
+            <label>Priority<select name="priority" required><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option></select></label>
+            <label>Describe the issue<textarea name="description" rows="3" required minlength="8" maxlength="1000" placeholder="Tell us what needs attention…"></textarea></label>
+            <button class="btn btn-primary" type="submit">Submit request <span>→</span></button>
+          </form>
+        </section>
+        <section class="panel full-panel">
+          <div class="panel-heading"><div><span class="section-kicker">REQUEST HISTORY</span><h2>Your maintenance requests</h2></div><button id="refreshResident" class="btn btn-outline btn-small">Refresh</button></div>
+          <div id="myRequests" class="table-wrap"></div>
+        </section>
+      </div>
+
+      <div id="adminPanel" class="hidden">
+        <div class="admin-grid">
+          <section class="panel">
+            <div class="panel-heading"><div><span class="section-kicker">ROOM INVENTORY</span><h2>Add a room</h2></div><span class="panel-icon">⌂</span></div>
+            <form id="roomForm" class="stack-form">
+              <label>Room number<input name="room_number" required maxlength="20" placeholder="e.g. A-204"></label>
+              <div class="form-row"><label>Block<input name="block" required maxlength="30" placeholder="A Block"></label><label>Floor<input name="floor" type="number" min="0" max="100" required value="1"></label></div>
+              <div class="form-row"><label>Capacity<input name="capacity" type="number" min="1" max="12" required value="2"></label><label>Room type<select name="room_type"><option>Shared</option><option>Single</option><option>Accessible</option></select></label></div>
+              <button class="btn btn-primary" type="submit">Add room</button>
+            </form>
+          </section>
+          <section class="panel">
+            <div class="panel-heading"><div><span class="section-kicker">ALLOCATE A BED</span><h2>Assign a room</h2></div><span class="panel-icon">↗</span></div>
+            <form id="allocationForm" class="stack-form">
+              <label>Resident<select id="residentSelect" name="user_id" required><option value="">Loading residents…</option></select></label>
+              <label>Available room<select id="roomSelect" name="room_id" required><option value="">Loading rooms…</option></select></label>
+              <button class="btn btn-primary" type="submit">Allocate room</button>
+              <p class="fine-print">A resident can have only one active allocation. The room must have an available bed.</p>
+            </form>
+          </section>
+        </div>
+        <section class="panel admin-table-panel">
+          <div class="panel-heading"><div><span class="section-kicker">ALL ROOMS</span><h2>Room inventory</h2></div><button id="refreshAdmin" class="btn btn-outline btn-small">Refresh data</button></div>
+          <div id="roomsTable" class="table-wrap"></div>
+        </section>
+        <section class="panel admin-table-panel">
+          <div class="panel-heading"><div><span class="section-kicker">RESIDENT CARE</span><h2>Maintenance requests</h2></div></div>
+          <div id="allRequests" class="table-wrap"></div>
+        </section>
+        <section class="panel admin-table-panel">
+          <div class="panel-heading"><div><span class="section-kicker">RESIDENT DIRECTORY</span><h2>Residents</h2></div></div>
+          <div id="residentsTable" class="table-wrap"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <footer><span>HostelDesk</span><span>Room allocation made clearer. Maintenance made easier.</span></footer>
+  <script src="app.js" defer></script>
+</body>
+</html>
